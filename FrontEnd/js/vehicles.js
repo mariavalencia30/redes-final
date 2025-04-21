@@ -5,10 +5,10 @@ class VehiclesAPI {
         this.baseUrl = API_URLS.vehiculos;
     }
 
+    
     async getAllVehicles() {
         try {
-            const response = await fetch(`${this.baseUrl}/vehiculos`);
-            // URL base directa
+            const response = await fetch(`${this.baseUrl}/vehiculos`); // URL base directa
             if (!response.ok) throw new Error('Error en la API');
             const data = await response.json();
             
@@ -296,29 +296,39 @@ class VehiclesUI {
     }
     
 
-    displayResults(vehiclesData) {
-        const resultsContainer = document.querySelector('#resultados .models-grid');
-        
-        if (!resultsContainer) return;
-    
-        resultsContainer.innerHTML = '';
-        
-        if (!vehiclesData || vehiclesData.length === 0) {
-            resultsContainer.innerHTML = `
-                <p class="no-results">
-                    <i class="fas fa-car-crash"></i>
-                    No se encontraron vehículos
-                </p>
-            `;
-            return;
-        }
-        
-        // Después (correcto)
-    vehiclesData.forEach(vehicle => {
-    resultsContainer.insertAdjacentHTML('beforeend', this.createVehicleCard(vehicle));
-  });
-  
+    // Método displayResults corregido
+displayResults(vehiclesData) {
+    const resultsContainer = document.querySelector('#resultados .models-grid');
+    if (!resultsContainer) {
+        console.error('Contenedor de resultados no encontrado');
+        return;
     }
+
+    resultsContainer.innerHTML = '';
+
+    if (!vehiclesData?.length) {
+        resultsContainer.innerHTML = `
+            <p class="no-results">
+                <i class="fas fa-car-crash"></i>
+                No se encontraron vehículos
+            </p>
+        `;
+        return;
+    }
+
+    vehiclesData.forEach(vehicle => {
+        const cardHtml = this.createVehicleCard(vehicle);
+        const cardElement = this.createCardFromHtml(cardHtml);
+        resultsContainer.appendChild(cardElement);
+    });
+}
+
+// Función auxiliar para convertir HTML a DOM
+createCardFromHtml(htmlString) {
+    const template = document.createElement('template');
+    template.innerHTML = htmlString.trim();
+    return template.content.firstChild;
+}
 
     // Crear tarjeta de vehículo
     createVehicleCard(vehicle) {
@@ -389,25 +399,33 @@ class VehiclesUI {
         }
     }
 
+    // En VehiclesUI.handleExplore()
     async handleExplore() {
-        console.log('Explorar fue clickeado');
         try {
-            // Obtener TODOS los vehículos (sin límite)
             const response = await this.api.getAllVehicles();
             
-            if (response.success) {
-                // Mostrar todos los resultados
-                this.displayResults(response.data);
+            if (response.success && response.data) {
+                // Mostrar todos los vehículos sin filtros
+                this.displayResults(response.data); 
                 
-                // Scroll a resultados (sin afectar destacados)
+                // Desplazarse a la sección de resultados
                 document.getElementById('resultados').scrollIntoView({ 
                     behavior: 'smooth',
                     block: 'start'
                 });
+                
+                
+                document.getElementById('marcaFilter').value = '';
+                document.getElementById('modeloFilter').value = '';
+                document.getElementById('yearFilter').value = '';
+            } else {
+                this.displayResults([]);
+                console.warn('No hay vehículos disponibles');
             }
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error al cargar vehículos:', error);
             this.displayResults([]);
+            alert('Error al cargar todos los vehículos');
         }
     }
 }

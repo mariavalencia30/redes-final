@@ -1,5 +1,6 @@
 // Importar configuración
 import { API_URLS } from './config.js';
+app.use('/api', require('./routes/vehiculosRoutes'));
 
 class Api {
     constructor() {
