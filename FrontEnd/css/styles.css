@@ -1,0 +1,371 @@
+/* Estilos generales */
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2980b9;
+    --danger-color: #e74c3c;
+    --success-color: #2ecc71;
+    --light-color: #ecf0f1;
+    --dark-color: #2c3e50;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+.btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn-danger:hover {
+    opacity: 0.9;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 1rem;
+    margin-bottom: 2rem;
+}
+
+header h1 {
+    margin-bottom: 1rem;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 1rem;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+}
+
+/* Estilos para las tarjetas de vehículos */
+.vehicles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+.vehicle-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    color: #333;
+    border: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.vehicle-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.vehicle-image {
+    width: 100%;
+    padding-top: 97.24%; /* Proporción 362:352 */
+    position: relative;
+    overflow: hidden;
+}
+
+.vehicle-card img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.vehicle-info {
+    padding: 1rem;
+    background: #fff;
+}
+
+.vehicle-card h3 {
+    margin: 0;
+    color: #1a1a1a;
+    font-size: 1.2rem;
+}
+
+.vehicle-card .price {
+    color: #e63946;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+}
+
+.vehicle-card .details {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+    flex-grow: 1;
+}
+
+.vehicle-card .details span {
+    display: block;
+    margin-bottom: 0.3rem;
+}
+
+.vehicle-card .btn {
+    width: 100%;
+    margin-top: auto;
+    background: #e63946;
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.vehicle-card .btn:hover {
+    background: #c1121f;
+}
+
+/* Estilos para el dashboard */
+.dashboard-container {
+    display: flex;
+    min-height: calc(100vh - 60px);
+}
+
+.sidebar {
+    width: 250px;
+    background-color: var(--dark-color);
+    color: white;
+    padding: 1rem 0;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar li a {
+    display: block;
+    padding: 0.75rem 1.5rem;
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar li a:hover, .sidebar li.active a {
+    background-color: rgba(255,255,255,0.1);
+}
+
+.dashboard-content {
+    flex: 1;
+    padding: 2rem;
+    background-color: white;
+}
+
+.dashboard-section {
+    margin-bottom: 2rem;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Estilos para formularios */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.form-group input, 
+.form-group select, 
+.form-group textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+/* Estilos para tablas */
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Secciones */
+section {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* Formularios */
+form {
+    display: grid;
+    gap: 1rem;
+    max-width: 500px;
+}
+
+input, select {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+button {
+    padding: 0.5rem 1rem;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: #333;
+    color: white;
+    margin-top: 2rem;
+}
+
+.results-section {
+    padding: 2rem;
+    background-color: #f8f9fa;
+}
+
+.results-section h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #333;
+    font-size: 2rem;
+}
+
+.no-results {
+    text-align: center;
+    color: #666;
+    font-size: 1.2rem;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.featured-models {
+    padding: 2rem;
+    background-color: #fff;
+}
+
+.featured-models h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #333;
+    font-size: 2rem;
+}
+
+.results-section .models-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+.results-section .vehicle-card {
+    width: 300px;
+    height: 350px;
+    margin: 0 auto;
+}
+
+.results-section .vehicle-image {
+    width: 100%;
+    height: 180px;
+}
+
+.results-section .vehicle-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.results-section .vehicle-info {
+    padding: 1rem;
+}
+
+.results-section .vehicle-info h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.results-section .vehicle-info p {
+    font-size: 1rem;
+    margin-bottom: 0.4rem;
+}
+
+.results-section .vehicle-info .btn {
+    padding: 0.5rem;
+    font-size: 1rem;
+}
