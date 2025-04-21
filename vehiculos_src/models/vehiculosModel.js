@@ -2,7 +2,6 @@
 const mysql = require("mysql2/promise");
 
 // Configuración de la conexión a la base de datos MySQL
-
 const connection = mysql.createPool({
     host: "localhost",
     user: "root",
@@ -48,12 +47,8 @@ class Vehiculo {
     }
 
     // Método para obtener todos los vehículos
-    static async obtenerVehiculos(limit) {
-        let query = 'SELECT * FROM vehiculos';
-        if (limit) {
-            query += ` LIMIT ${limit}`;
-        }
-        const [rows] = await connection.execute(query);
+    static async obtenerVehiculos() {
+        const [rows] = await connection.execute('SELECT * FROM vehiculos');
         return rows;
     }
 
@@ -100,35 +95,33 @@ class Vehiculo {
 
             // Filtros existentes (marca, modelo, año)
             if (filtros.marca) {
-                query += ` AND marca = ?`;
-                valores.push(filtros.marca.trim());
+                query += ` AND LOWER(marca) LIKE ?`;
+                valores.push(`%${filtros.marca.toLowerCase().trim()}%`);
             }
             if (filtros.modelo) {
-                query += ` AND modelo = ?`;
-                valores.push(filtros.modelo.trim());
+                query += ` AND LOWER(modelo) LIKE ?`;
+                valores.push(`%${filtros.modelo.toLowerCase().trim()}%`);
             }
             if (filtros.año) {
                 query += ` AND año = ?`;
                 valores.push(parseInt(filtros.año));
             }
 
-            // Filtros: estado y precio
+            // Nuevos filtros: estado y precio
             if (filtros.estado) {
                 query += ` AND estado = ?`;
-                valores.push(filtros.estado.trim());
+                valores.push(filtros.estado.trim()); // Ej: "disponible", "vendido"
             }
             if (filtros.precio_max) {
                 query += ` AND precio <= ?`;
-                valores.push(parseFloat(filtros.precio_max));
+                valores.push(parseFloat(filtros.precio_max)); // Busca vehículos <= precio_max
             }
             if (filtros.precio_min) {
                 query += ` AND precio >= ?`;
-                valores.push(parseFloat(filtros.precio_min));
+                valores.push(parseFloat(filtros.precio_min)); // Busca vehículos >= precio_min
             }
 
-            console.log("[Modelo] Consulta SQL:", query);
-            console.log("[Modelo] Valores:", valores);
-
+            console.log("[Modelo] Consulta SQL:", query, valores);
             const [rows] = await connection.execute(query, valores);
             console.log(`[Modelo] ${rows.length} resultados encontrados`);
 
@@ -137,63 +130,6 @@ class Vehiculo {
         } catch (err) {
             console.error("[Modelo] Error en búsqueda:", err.message);
             throw new Error("Error al filtrar vehículos");
-        }
-    }
-
-    // Método para obtener todas las marcas únicas
-    static async obtenerMarcas() {
-        try {
-            console.log('Iniciando consulta de marcas');
-            const [rows] = await connection.execute(
-                'SELECT DISTINCT marca FROM vehiculos ORDER BY marca'
-            );
-            const marcas = rows.map(row => row.marca);
-            console.log('Marcas encontradas:', marcas);
-            return marcas;
-        } catch (err) {
-            console.error('Error en obtenerMarcas:', err);
-            throw err;
-        }
-    }
-
-    // Método para obtener vehículos destacados (los 3 primeros disponibles)
-    static async obtenerVehiculosDestacados() {
-        try {
-            const [rows] = await connection.execute(
-                'SELECT * FROM vehiculos WHERE estado = "disponible" LIMIT 3'
-            );
-            return rows;
-        } catch (error) {
-            console.error('Error al obtener vehículos destacados:', error);
-            throw new Error('Error al obtener los vehículos destacados');
-        }
-    }
-
-    // Método para obtener modelos por marca
-    static async obtenerModelosPorMarca(marca) {
-        try {
-            const [rows] = await connection.execute(
-                'SELECT DISTINCT modelo FROM vehiculos WHERE marca = ? ORDER BY modelo',
-                [marca]
-            );
-            return rows.map(row => row.modelo);
-        } catch (error) {
-            console.error('Error al obtener modelos:', error);
-            throw new Error('Error al obtener los modelos de vehículos');
-        }
-    }
-
-    // Método para obtener años por marca y modelo
-    static async obtenerAñosPorMarcaYModelo(marca, modelo) {
-        try {
-            const [rows] = await connection.execute(
-                'SELECT DISTINCT año FROM vehiculos WHERE marca = ? AND modelo = ? ORDER BY año DESC',
-                [marca, modelo]
-            );
-            return rows.map(row => row.año);
-        } catch (error) {
-            console.error('Error al obtener años:', error);
-            throw new Error('Error al obtener los años de vehículos');
         }
     }
 }
