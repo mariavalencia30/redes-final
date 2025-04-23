@@ -192,7 +192,7 @@ router.post("/venta/:purchaseId", async (req, res) => {
     }
 });
 
-router.delete('/visitas/:id'), async (req, res) => {
+router.delete('/visitas/:id', async (req, res) => {
     const { id } = req.params;
         try {
             const result = await Compra.eliminarVisita(id);
@@ -203,7 +203,7 @@ router.delete('/visitas/:id'), async (req, res) => {
             res.status(500).json({ message: "Error al registrar la visita", error: err.message });
           }
     
-}
+});
 
 router.post('/visitas', async (req, res) => {
     const { userId, vehicleId, asistio, fecha } = req.body;
