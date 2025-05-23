@@ -6,7 +6,7 @@
 
 ## 🚗 Descripción del Proyecto
 
-Sale Cars es una plataforma web que permite explorar, analizar y visualizar información sobre vehículos usados en Emiratos Árabes Unidos. El sistema combina una arquitectura de microservicios en Node.js con un clúster de Apache Spark para análisis de datos a gran escala, integrando visualizaciones dinámicas mediante Metabase.
+Sale Cars es una plataforma web que utiliza un dataset público de vehículos usados de Emiratos Árabes Unidos para análisis y visualización de datos a gran escala mediante Apache Spark y Metabase. Además, permite a los usuarios registrar sus propios vehículos para la venta, explorar los autos disponibles en la plataforma y realizar procesos de compra mediante agendamiento de citas y simulaciones. La arquitectura está basada en microservicios desarrollados en Node.js para backend y React.js en el frontend, integrando funcionalidades tanto analíticas como transaccionales.
 
 ---
 
