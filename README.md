@@ -47,7 +47,15 @@ Sale Cars es una plataforma web que utiliza un dataset público de vehículos us
 - **Pruebas de carga:** Apache JMeter  
 
 ---
+## 🚀 Clonación del Repositorio
 
+Clona este repositorio para comenzar a trabajar en el proyecto:
+
+```bash
+git clone https://github.com/mariavalencia30/redes-final.git
+cd redes-final
+
+---
 ## 🚀 Despliegue
 
 1. Clonar el repositorio.  
