@@ -18,7 +18,6 @@
             <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
         </button>
     </header>
-
     <nav class="sidebar">
         <ul class="nav-menu">
             <li class="nav-item active" data-section="users-section">
@@ -32,6 +31,9 @@
             </li>
             <li class="nav-item" data-section="visits-section">
                 <i class="fas fa-calendar-check"></i> Visitas
+            </li>
+	    <li class="nav-item" data-section="metabase-dashboard">
+                <i class="fas fa-chart-line"></i> Dashboard
             </li>
         </ul>
     </nav>
@@ -126,6 +128,25 @@
                 <tbody></tbody>
             </table>
         </section>
+
+	    <!-- Sección de Dashboard Metabase -->
+<section id="metabase-dashboard" class="section" style="display: none;">
+    <div class="section-header">
+        <h2>Dashboard de Metabase</h2>
+    </div>
+    <div class="dashboard-container">
+        <iframe
+src="http://192.168.119.138:3008/embed/dashboard/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNvdXJjZSI6eyJkYXNoYm9hcmQiOjJ9LCJwYXJhbXMiOnt9LCJleHAiOjE3NTAzNjkyNDAsImlhdCI6MTc0Nzc3NzIzOX0.h4WgrCIWak9BKRe1POAkK12M-SCb5hiO3INJ5dEvPqo#bordered=true&amp;titled=true" 
+            frameborder="0"
+            width="100%"
+            height="600"
+            allowtransparency
+            title="Dashboard de Metabase">
+        </iframe>
+    </div>
+</section>
+
+
     </main>
 
     <!-- Modal de Usuario -->
@@ -181,7 +202,7 @@
                 </div>
                 <div class="form-group">
                     <label>Año</label>
-                    <input id="editAño" type="number" name="año" required>
+                    <input id="editAnio" type="number" name="anio" required>
                 </div>
                 <div class="form-group">
                     <label>Precio</label>
@@ -313,7 +334,5 @@
     <footer>
         <p>&copy; 2024 Sale Cars. Todos los derechos reservados.</p>
     </footer>
-
-    
 </body>
 </html>

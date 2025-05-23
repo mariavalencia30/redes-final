@@ -102,7 +102,7 @@ class VehiclesAPI {
     // Obtener años disponibles por marca y modelo
     async getYearsByBrandAndModel(brand, model) {
         try {
-            const response = await fetch(`${this.baseUrl}/vehiculos/marcas/${brand}/modelos/${model}/años`);
+            const response = await fetch(`${this.baseUrl}/vehiculos/marcas/${brand}/modelos/${model}/years`);
             if (!response.ok) {
                 throw new Error('Error al obtener los años');
             }
@@ -272,13 +272,13 @@ class VehiclesUI {
         const filters = {
             marca: document.getElementById('marcaFilter').value,
             modelo: document.getElementById('modeloFilter').value,
-            año: document.getElementById('yearFilter').value,
+            anio: document.getElementById('yearFilter').value,
             precio_min: document.getElementById('minPrice').value,
             precio_max: document.getElementById('maxPrice').value,
             kilometraje: document.getElementById('kilometraje').value
         };
     
-        if (!filters.marca && !filters.modelo && !filters.año && !filters.precio_min && !filters.precio_max && !filters.kilometraje) {
+        if (!filters.marca && !filters.modelo && !filters.anio && !filters.precio_min && !filters.precio_max && !filters.kilometraje) {
             alert('Por favor, selecciona al menos un criterio de búsqueda');
             return;
         }
@@ -344,7 +344,7 @@ createCardFromHtml(htmlString) {
                 </div>
                 <div class="vehicle-info">
                     <h3>${vehicle.marca} ${vehicle.modelo}</h3>
-                    <p>Año: ${vehicle.año}</p>
+                    <p>Año: ${vehicle.anio}</p>
                     <p>Precio: $${precio.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</p>
                     <p>Kilometraje: ${kilometraje.toLocaleString('es-MX')} km</p>
                     <div class="vehicle-status ${vehicle.estado}">

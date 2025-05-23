@@ -213,7 +213,7 @@ class VehicleManager {
                 body: JSON.stringify({
                     marca: vehicleData.marca,
                     modelo: vehicleData.modelo,
-                    año: parseInt(vehicleData.año),
+                    anio: parseInt(vehicleData.anio),
                     precio: parseFloat(vehicleData.precio),
                     kilometraje: parseInt(vehicleData.kilometraje) || 0,
                     estado: vehicleData.estado || 'disponible'
@@ -543,7 +543,7 @@ async function loadPurchaseFormSelects() {
         vehicleData.filter(vehicle => vehicle.estado !== 'vendido').forEach(vehicle => {
             const option = document.createElement('option');
             option.value = vehicle.id;
-            option.textContent = `${vehicle.marca} ${vehicle.modelo} (${vehicle.año}) - ${formatCurrency(vehicle.precio)}`;
+            option.textContent = `${vehicle.marca} ${vehicle.modelo} (${vehicle.anio}) - ${formatCurrency(vehicle.precio)}`;
             option.dataset.price = vehicle.precio; // Store the price as data attribute
             vehicleSelect.appendChild(option);
         });
@@ -1106,7 +1106,7 @@ function renderUserVehicles(vehicles) {
             ${vehicles.map(vehicle => `
                 <div class="vehicle-card">
                     <h4>${vehicle.marca} ${vehicle.modelo}</h4>
-                    <p><strong>Año:</strong> ${vehicle.anio || vehicle.año}</p>
+                    <p><strong>Año:</strong> ${vehicle.anio || vehicle.anio}</p>
                     <p><strong>Precio:</strong> ${formatCurrency(vehicle.precio_total || vehicle.precio)}</p>
                     <p><strong>Fecha de compra:</strong> ${new Date(vehicle.fecha).toLocaleDateString()}</p>
                     ${vehicle.imagen ? 
@@ -1196,7 +1196,7 @@ vehicleForm.addEventListener('submit', async (e) => {
     const vehicleData = {
         marca: document.getElementById('editMarca').value,
         modelo: document.getElementById('editModelo').value,
-        año: document.getElementById('editAño').value,
+        anio: document.getElementById('editAnio').value,
         precio: document.getElementById('editPrecio').value,
         kilometraje: document.getElementById('editKilometraje').value
     };
@@ -1382,7 +1382,7 @@ function updateVehiclesTable(vehicles) {
             <td>${vehicle.id}</td>
             <td>${vehicle.marca}</td>
             <td>${vehicle.modelo}</td>
-            <td>${vehicle.año}</td>
+            <td>${vehicle.anio}</td>
             <td>${formatCurrency(vehicle.precio)}</td>
             <td>${vehicle.kilometraje}</td>
             <td>${vehicle.estado || 'disponible'}</td>
@@ -1554,7 +1554,7 @@ async function loadModalSelects() {
         // Actualizar selects de vehículos
         const vehicleSelects = document.querySelectorAll('select[name="vehicleId"]');
         const vehicleOptions = vehicles.data.map(vehicle => 
-            `<option value="${vehicle.id}">${vehicle.marca} ${vehicle.modelo} (${vehicle.año})</option>`
+            `<option value="${vehicle.id}">${vehicle.marca} ${vehicle.modelo} (${vehicle.anio})</option>`
         ).join('');
 
         vehicleSelects.forEach(select => {
@@ -1578,9 +1578,14 @@ async function loadModalSelects() {
                 rol: userForm.role.value
             };
 
-            if (userForm.password.value) {
-                userData.password = userForm.password.value;
-            }
+        const password = userForm.password.value;
+        if (password) {
+//            console.log("Password provided:", password);
+            userData.password = password;
+        } else {
+            console.log("No password provided, will not update password.");
+        }
+
             if (userForm.phone.value === "undefined" || userForm.phone.value === "") {
                 userData.telefono = null;
             } else {
@@ -1687,7 +1692,7 @@ async function handleEdit(type, id) {
                         document.getElementById('editVehicleId').value = vehicle.id;
                         document.getElementById('editMarca').value = vehicle.marca || '';
                         document.getElementById('editModelo').value = vehicle.modelo || '';
-                        document.getElementById('editAño').value = vehicle.año || '';
+                        document.getElementById('editAnio').value = vehicle.anio || '';
                         document.getElementById('editPrecio').value = vehicle.precio || '';
                         document.getElementById('editKilometraje').value = vehicle.kilometraje || '';
                         showModal('vehicleModal');
@@ -1830,7 +1835,7 @@ function loadPurchasesTable() {
             <td>${vehicle.id}</td>
             <td>${vehicle.marca}</td>
             <td>${vehicle.modelo}</td>
-            <td>${vehicle.año}</td>
+            <td>${vehicle.anio}</td>
             <td>${vehicle.precio}</td>
             <td>${vehicle.kilometraje}</td>
             <td>${vehicle.estado || 'disponible'}</td>
@@ -1946,6 +1951,26 @@ function displayVisits(visits) {
         ));
     });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    checkAuth();
+    showMetabaseDashboard();  // Llamamos a la función para mostrar el dashboard de Metabase
+});
+
+// Función para mostrar el dashboard de Metabase
+function showMetabaseDashboard() {
+    const metabaseSection = document.getElementById('metabase-dashboard');
+    
+    // Asegurarse de que la sección del dashboard esté visible
+    if (metabaseSection) {
+        metabaseSection.style.display = 'block';
+        
+        // Aquí puedes configurar dinámicamente la URL del iframe si es necesario
+        const iframe = metabaseSection.querySelector('iframe');
+        iframe.src = 'http://192.168.119.138:3008/embed/dashboard/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNvdXJjZSI6eyJkYXNoYm9hcmQiOjJ9LCJwYXJhbXMiOnt9LCJleHAiOjE3NTAzNjkyNDAsImlhdCI6MTc0Nzc3NzIzOX0.h4WgrCIWak9BKRe1POAkK12M-SCb5hiO3INJ5dEvPqo#bordered=true&titled=true';  // URL del iframe de tu dashboard
+    }
+}
+
 
 // Exportar las clases para uso en otros módulos
 export {

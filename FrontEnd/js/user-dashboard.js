@@ -78,7 +78,7 @@ function setupVehicleForm() {
             const formData = {
                 marca: document.getElementById('marca').value,
                 modelo: document.getElementById('modelo').value,
-                año: document.getElementById('año').value,
+                anio: document.getElementById('anio').value,
                 precio: document.getElementById('precio').value,
                 kilometraje: document.getElementById('kilometraje').value
             };
@@ -360,7 +360,7 @@ async function loadUserVehicles(userId) {
         container.innerHTML = vehiclesData.map(item => `
             <div class="vehicle-card">
                 <h3>${item.marca} ${item.modelo}</h3>
-                <p>Año: ${item.anio || item.año}</p>
+                <p>Año: ${item.anio || item.anio}</p>
                 <p>Precio: $${item.precio_total || item.precio}</p>
                 <p>Fecha de compra: ${new Date(item.fecha).toLocaleDateString()}</p>
                 ${item.imagen ? `<img src="${item.imagen}" alt="${item.marca} ${item.modelo}">` : ''}

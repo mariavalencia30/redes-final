@@ -1,0 +1,156 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:8.0
+    ports:
+      - "32000:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - backend
+
+  usuarios:
+    image: marivalencia/salescarsv2_usuarios
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=password
+    depends_on:
+      - db
+    ports:
+      - "3001:3001"
+    networks:
+      - backend
+
+  frontend:
+    image: mariavalencia30/salescarsv2-frontend:latest
+    ports:
+      - "8082:80" # El puerto 8082 del host mapea al puerto 80 del contenedor
+    depends_on:
+      # Si tu frontend necesita que las APIs estén listas para iniciar, mantén estas dependencias.
+      # Si no, puedes eliminar las líneas 'depends_on'.
+      - usuarios
+      - vehiculos
+      - compras
+    networks:
+      - backend
+
+  vehiculos:
+    image: mariavalencia30/salecars:vehiculos_tagname
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=password
+    depends_on:
+      - db
+    ports:
+      - "3002:3002"
+    networks:
+      - backend
+
+  compras:
+    image: mariavalencia30/salescarsv2-compras
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=password
+    depends_on:
+      - db
+    ports:
+      - "3006:3006"
+    networks:
+      - backend
+   
+  haproxy:
+    image: haproxy:2.8 # Versión recomendada de HAProxy, puedes usar 'haproxy:latest' si prefieres
+    ports:
+      - "80:80"       # Puerto para el tráfico HTTP de tu aplicación
+      - "8404:8404"   # Puerto para la página de estadísticas de HAProxy (accede a http://TU_IP:8404/haproxy_stats)
+    volumes:
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    networks:
+      - backend
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager] # Para que se ejecute en el nodo manager, o puedes usar 'node.role == worker'
+    depends_on:
+      - frontend
+      - vehiculos
+      - usuarios
+      - compras
+
+  spark-master:
+    image: bitnami/spark:latest
+    environment:
+      - SPARK_MODE=master
+    ports:
+      - "7077:7077"
+      - "8081:8080"
+    networks:
+      - backend
+    volumes:
+      - /var/www/html/SalesCarsV2/data:/bitnami/spark/data
+
+  spark-worker-1:
+    image: bitnami/spark:latest
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+    depends_on:
+      - spark-master
+    networks:
+      - backend
+    volumes:
+      - /var/www/html/SalesCarsV2/data:/bitnami/spark/data
+
+  pyspark-runner:
+    image: mariavalencia30/salecars-pyspark:latest
+    user: root
+    volumes:
+      - ./data:/app/data
+      -  /var/www/html/SalesCarsV2/pyspark:/app
+      - /var/www/html/SalesCarsV2/jars:/jars
+    depends_on:
+      - spark-master
+      - spark-worker-1
+      - db
+    networks:
+      - backend
+    environment:
+      - SPARK_MASTER_URL=spark://spark-master:7077
+    command: bash -c "sleep 20 && /opt/bitnami/spark/bin/spark-submit --jars /jars/mysql-connector-j-8.0.33.jar /app/pipeline_spark_vehiculos.py"
+
+  metabase:
+    image: mariavalencia30/metabase_arm:latest
+    ports:
+      - "3008:3000"
+    environment:
+      MB_DB_TYPE: mysql
+#      MB_DB_DBNAME: metabase
+      MB_DB_DBNAME: vehiculosbd
+      MB_DB_PORT: 3306
+      MB_DB_USER: root  # Usuario para conectarse a MySQL (puedes usar otro usuario si lo prefieres)
+      MB_DB_PASS: password  # Contraseña para conectarse a MySQL
+      MB_DB_HOST: db  # Nombre del servicio de MySQL en Docker Compose
+    networks:
+      - backend
+    depends_on:
+      - db
+
+networks:
+  backend:
+    driver: overlay
+
+volumes:
+  pyspark_data:
+    driver: local
+  db_data:
+    driver: local

@@ -1,0 +1,124 @@
+version: "3"
+
+services:
+  db:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - backend
+
+  usuarios:
+    image: salescarsv2-usuarios
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=password
+    depends_on:
+      - db
+    ports:
+      - "3001:3001"
+    networks:
+      - backend
+
+  vehiculos:
+    image: salescarsv2-vehiculos
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=password
+    depends_on:
+      - db
+    ports:
+      - "3002:3002"
+    networks:
+      - backend
+
+  compras:
+    image: salescarsv2-compras
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=password
+    depends_on:
+      - db
+    ports:
+      - "3006:3006"
+    networks:
+      - backend
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - usuarios
+      - vehiculos
+      - compras
+    networks:
+      - backend
+
+  frontend:
+    build:
+      context: ./FrontEnd
+    image: salescarsv2-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - nginx
+    networks:
+      - backend
+
+  # Spark Master service
+  spark-master:
+    image: bitnami/spark:latest
+    environment:
+      - SPARK_MODE=master
+      - SPARK_MASTER_HOST=spark-master
+    ports:
+      - "8080:8080"  # UI de Spark
+      - "7077:7077"  # Puerto para conexiones Spark
+    networks:
+      - backend
+    deploy:
+      replicas: 1
+
+  # Spark Worker service
+  spark-worker:
+    image: bitnami/spark:latest
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER=spark://spark-master:7077
+    networks:
+      - backend
+    deploy:
+      replicas: 2
+
+  # Dataset processing (opcional, si usas un contenedor para trabajar con el dataset)
+dataset-processing:
+ image: python:3.9-slim
+ volumes:
+- ./uae_used_cars_10k.csv:/dataset/uae_used_cars_10k.csv
+ working_dir: /dataset
+ command: >
+    bash -c "pip install pandas pyspark && python /dataset/process_dataset.py"
+ networks:
+    - backend
+ depends_on:
+    - spark-master
+
+volumes:
+  db_data:
+
+networks:
+  backend:
+    driver: overlay

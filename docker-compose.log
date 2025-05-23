@@ -1,0 +1,26 @@
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 261B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/nginx:alpine
+#2 DONE 0.2s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/2] FROM docker.io/library/nginx:alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 1.30kB done
+#5 DONE 0.0s
+
+#6 [2/2] COPY . /usr/share/nginx/html
+#6 CACHED
+
+#7 exporting to image
+#7 exporting layers done
+#7 writing image sha256:0a9ab8495c29792c202c1c57154cb504773cc798354a7ca7831c4f5b8962c611 done
+#7 naming to docker.io/library/salescarsv2-frontend done
+#7 DONE 0.0s
